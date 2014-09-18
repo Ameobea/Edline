@@ -1,0 +1,19 @@
+{
+    "name": "EdlineOverview",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "browser_action": {
+        "default_title": "Edline Overview",
+        "default_popup": "popup.html"
+    },
+    "background": {
+	    "scripts": ["background.js"],
+	    "persistent": true
+	},
+	"content_scripts": [
+    {
+        "matches": ["http://edline.net/*", "https://edline.net/*"],
+        "js": ["content.js"]
+    }
+]
+}
