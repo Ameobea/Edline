@@ -42,20 +42,37 @@ console.log(pages);*/
 linkArray = $('table.ed-formTable > tbody > tr > td > a');
 
 var reportLink = new Array();
+var o = 0;
 for(i=0; i<(linkArray.length)-1; i++) {
 	if((linkArray[i].href).indexOf("javascript")>-1) {
 		var link = linkArray[i].href;
 		var exploded = link.split("'");
 		var temp = exploded[1];
-		reportLink[i] = "https://www.edline.net/DocViewBody.page?currentDocEntid=" + temp + "&returnPage=%2FUserDocList.page";
+		//console.log(temp);
+		reportLink[o] = "https://www.edline.net/DocViewBody.page?currentDocEntid=";
+		reportLink[o] = reportLink[o].concat(temp,"&returnPage=%2FUserDocList.page");
+		o++;
 		//console.log(ttemp);
 	}
 }
+//console.log(reportLink);
 var contents = new Array();
-for(i=0; i<(reportLink.length-1); i++) {
-		$.get(reportLink[i]).done(function(data){
-			contents[i] = data;
-			//console.log(i);
-		});
+var length = reportLink.length - 1;
+//console.log(length);
+var j = 0;
+nextGet(j);
+function nextGet(j) {
+	$.ajax({
+	     async: false,
+	     type: 'GET',
+	     url: reportLink[j],
+	     success: function(data) {
+      		contents[j] = data;
+			//console.log(data);
+			if(j<length){
+				nextGet(j+1);
+			}
+	    }
+	});
 }
-console.log(contents);
+//console.log(contents);
