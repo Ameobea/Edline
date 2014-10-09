@@ -75,4 +75,4 @@ function nextGet(j) {
 	    }
 	});
 }
-//console.log(contents);
+console.log(contents);
