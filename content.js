@@ -76,3 +76,9 @@ function nextGet(j) {
 	});
 }
 console.log(contents);
+
+//Removed because I'm going to go for the popup idea rather than try to build an entirely new virtual page on the actual site.
+/*var raw = '<li id="myContents0"><div class="dbtop"></div><a href="https://Edline.net" tabindex="0">Private Reports</a><div class="dbbtm"></div></li>';
+console.log(raw);
+$('div.ed-columnRight ul:first li#myContents1').before("")*/
+//console.log(toc);
