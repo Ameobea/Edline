@@ -39,6 +39,11 @@ console.log(pages);*/
 //I may have to scrap all this due to the fact that I just realized that edline has no data on the page I just spent all that time grabbing...
 //Instead of coming from there it loads an iframe that contains the data and uses - you guessed it - that refid number I deleted a while ago.
 
+chrome.runtime.sendMessage({
+    from:    'content',
+    subject: 'showPageAction'
+});
+
 linkArray = $('table.ed-formTable > tbody > tr > td > a');
 
 var reportLink = new Array();
@@ -82,3 +87,12 @@ console.log(contents);
 console.log(raw);
 $('div.ed-columnRight ul:first li#myContents1').before("")*/
 //console.log(toc);
+
+chrome.runtime.onMessage.addListener(function(msg, sender, response) {
+    /* First, validate the message's structure */
+    if ((msg.from === 'popup') && (msg.subject === 'classInfo')) {
+        /* Directly respond to the sender (popup), 
+         * through the specified callback */
+        response(contents);
+    }
+});
