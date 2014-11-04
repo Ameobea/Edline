@@ -1,0 +1,17 @@
+.fullWidth {
+	width:800px;
+	height:600px;
+}
+body {
+	overflow: hidden;
+}
+
+.overview tr td {
+	border: 1px solid;
+	border-color: #DDDDDD !important;
+}
+
+.overview tr th {
+	border: 1px solid;
+	border-color: #DDDDDD !important;
+}
