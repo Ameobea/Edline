@@ -1,24 +1,31 @@
 function processClassInfo(info) {
-    console.log(info);
-    console.log(info.length);
+    //console.log(info);
+    //console.log(info.length);
     var parsed = new Array();
     for(i=0; i<(info.length); i++) {
         parsed[i] = $.parseHTML(info[i]);
     }
     console.log(parsed);
     var rawScores = new Array();
+    var rows;
+    var scoresLength = 0;
+    var temp1;
     for(i=0; i<parsed.length; i++) {
-        var rows = parsed[i][13].children[0].children[0].children[0].children[5].children[1].children[0];
+        rows = parsed[i][13].children[0].children[0].children[0].children[5].children[1].children[0].childNodes;
         console.log(rows);
-        var scoresLength = 0;
-        for(j=0; j<rows.length; i++){
-            if(rows.children[i].length==7){
-
+        //console.log(rows.length);
+        rawScores[i] = new Array();
+        for(j=0; j<rows.length; j++){
+            if(rows[j].childNodes.length==15){
+                rawScores[i][scoresLength] = new Array(rows[j].children[1].textContent, rows[j].children[2].textContent, rows[j].children[3].textContent, rows[j].children[5].textContent, rows[j].children[6].textContent);
+                //console.log(rawScores[i]);
+                scoresLength++;
             }
         }
-        //Date, Category, Score, Assignment Name, Points, Grade (unparsed)
+        //Date, Category, Assignment Name, Score, Points, Grade (unparsed)
         //rawScores[i] = new Array(
     }
+    console.log(rawScores);
 }
 
 window.addEventListener('DOMContentLoaded', function() {
