@@ -6,6 +6,7 @@ function processClassInfo(info) {
         parsed[i] = $.parseHTML(info[i]);
     }
     console.log(parsed);
+    drawClassList(parsed);
     var rawScores = new Array();
     var rows;
     var scoresLength = 0;
@@ -26,6 +27,24 @@ function processClassInfo(info) {
         //rawScores[i] = new Array(
     }
     console.log(rawScores);
+    drawClassData(0, rawScores);
+}
+
+function drawClassData(id, scoreData) {
+    $('.overview tbody').empty();
+    for(i=0; i<scoreData[id].length; i++) {
+        $('.overview tbody').append("<tr><td>" + scoreData[id][i][0] + "</td><td>" + scoreData[id][i][1] + "</td><td>" + scoreData[id][i][2] + "</td><td>" + scoreData[id][i][3] + "</td><td>" + scoreData[id][i][4] + "</td></tr>")
+    }
+}
+
+function drawClassList(rawData) {
+    console.log("test");
+    for(i=0; i<rawData.length; i++) {
+        //console.log(rawData[i][13]);
+        temp1 = rawData[i][13].children[0].children[0].children[0].children[2].innerText;
+        console.log(temp1);
+        $('.class-list').append("<li><a href='javascript:drawClassData(" + i + ")'>" + temp1 + "</a></li>");
+    }
 }
 
 window.addEventListener('DOMContentLoaded', function() {
