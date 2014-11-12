@@ -3,7 +3,9 @@
 	height:600px;
 }
 body {
-	overflow: hidden;
+	/*overflow: hidden;*/
+	width:750px !important;
+	height:600px !important;
 }
 
 .overview tr td {

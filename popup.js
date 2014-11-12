@@ -1,3 +1,26 @@
+var globalScores;
+var globalMeta;
+
+window.addEventListener('DOMContentLoaded', function() {
+    /* ...query for the active tab... */
+    chrome.tabs.query({
+        active: true,
+        currentWindow: true
+    }, function(tabs) {
+        /* ...and send a request for the DOM info... */
+        chrome.tabs.sendMessage(
+            tabs[0].id,
+            {from: 'popup', subject: 'classInfo'}, processClassInfo);
+    });
+});
+
+function setClickListner(){
+    $('.classid').click(function(){
+        console.log($(this).attr('cid'));
+        drawClassData($(this).attr('cid'), globalScores);
+    })
+}
+
 function processClassInfo(info) {
     //console.log(info);
     //console.log(info.length);
@@ -16,6 +39,7 @@ function processClassInfo(info) {
         console.log(rows);
         //console.log(rows.length);
         rawScores[i] = new Array();
+        scoresLength = 0;
         for(j=0; j<rows.length; j++){
             if(rows[j].childNodes.length==15){
                 rawScores[i][scoresLength] = new Array(rows[j].children[1].textContent, rows[j].children[2].textContent, rows[j].children[3].textContent, rows[j].children[5].textContent, rows[j].children[6].textContent);
@@ -27,11 +51,15 @@ function processClassInfo(info) {
         //rawScores[i] = new Array(
     }
     console.log(rawScores);
-    drawClassData(0, rawScores);
+    globalScores = rawScores;
+    setClickListner();
+    //drawClassData(0, rawScores);
+    //0,0,0,4,1,0,1,1+2
 }
 
 function drawClassData(id, scoreData) {
     $('.overview tbody').empty();
+    console.log(scoreData[id])
     for(i=0; i<scoreData[id].length; i++) {
         $('.overview tbody').append("<tr><td>" + scoreData[id][i][0] + "</td><td>" + scoreData[id][i][1] + "</td><td>" + scoreData[id][i][2] + "</td><td>" + scoreData[id][i][3] + "</td><td>" + scoreData[id][i][4] + "</td></tr>")
     }
@@ -43,19 +71,6 @@ function drawClassList(rawData) {
         //console.log(rawData[i][13]);
         temp1 = rawData[i][13].children[0].children[0].children[0].children[2].innerText;
         console.log(temp1);
-        $('.class-list').append("<li><a href='javascript:drawClassData(" + i + ")'>" + temp1 + "</a></li>");
+        $('.class-list').append("<li><a class='classid' cid='" + i + "' href='#'>" + temp1 + "</a></li>");
     }
 }
-
-window.addEventListener('DOMContentLoaded', function() {
-    /* ...query for the active tab... */
-    chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    }, function(tabs) {
-        /* ...and send a request for the DOM info... */
-        chrome.tabs.sendMessage(
-            tabs[0].id,
-            {from: 'popup', subject: 'classInfo'}, processClassInfo);
-    });
-});
