@@ -71,7 +71,7 @@ function calculateMeta(parsed){
 
 function drawClassData(id, scoreData) {
     $('.meta tbody').empty();
-    $('.meta tbody').append("<tr><td>" + globalMeta[i][0] + "</td><td>" + globalMeta[i][1] + "</td></tr>");
+    $('.meta tbody').append("<tr><td>" + globalMeta[id][0] + "</td><td>" + globalMeta[id][1] + "</td></tr>");
     $('.overview tbody').empty();
     console.log(scoreData[id])
     for(i=0; i<scoreData[id].length; i++) {
