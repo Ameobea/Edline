@@ -1,5 +1,5 @@
 var globalScores;
-var globalMeta;
+var globalMeta = new Array();
 
 window.addEventListener('DOMContentLoaded', function() {
     /* ...query for the active tab... */
@@ -52,12 +52,26 @@ function processClassInfo(info) {
     }
     console.log(rawScores);
     globalScores = rawScores;
+    calculateMeta(parsed);
     setClickListner();
     //drawClassData(0, rawScores);
-    //0,0,0,4,1,0,1,1+2
+    //13,0,0,0,4,1,0,1,1+2
+}
+
+function calculateMeta(parsed){
+    //console.log("ran calculateMeta");
+    for(i=0; i<parsed.length; i++) {
+        //console.log("in loop");
+        globalMeta[i] = new Array();
+        globalMeta[i][0] = parsed[i][13].children[0].children[0].children[0].children[4].children[1].children[0].children[1].children[1].innerText;
+        globalMeta[i][1] = parsed[i][13].children[0].children[0].children[0].children[4].children[1].children[0].children[1].children[2].innerText;
+    }
+    //console.log(globalMeta);
 }
 
 function drawClassData(id, scoreData) {
+    $('.meta tbody').empty();
+    $('.meta tbody').append("<tr><td>" + globalMeta[i][0] + "</td><td>" + globalMeta[i][1] + "</td></tr>");
     $('.overview tbody').empty();
     console.log(scoreData[id])
     for(i=0; i<scoreData[id].length; i++) {
