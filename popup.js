@@ -14,11 +14,48 @@ window.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function setClickListner(){
+function setClickListner(parsed){
+    $('.showoverview').click(function(){
+        drawOverview(parsed);
+    })
+    setClassListner();
+}
+
+function setClassListner(){
     $('.classid').click(function(){
         console.log($(this).attr('cid'));
         drawClassData($(this).attr('cid'), globalScores);
     })
+}
+
+function drawOverview(rawData){
+    $('.overview tbody').empty();
+    $('.meta tbody').empty();
+    for(i=0; i<rawData.length; i++) {
+        temp1 = rawData[i][13].children[0].children[0].children[0].children[2].innerText;
+        bgc = getBgc(globalMeta[i][1]);
+        $('.overview tbody').append("<tr><td><b><a class='classid' cid='" + i + "' href='#'>" + temp1 + "</a></b></td><td bgcolor='" + bgc + "'>" + globalMeta[i][1] + "</td></tr>");
+        setClassListner();
+    }
+}
+
+function getBgc(mark){
+    var bgc = "#FFFFFF";
+    if(mark.indexOf("A") > -1){
+        bgc = "#00FF00";
+    }else if(mark.indexOf("B") > -1){
+        bgc = "#CCFF66";
+    }else if(mark.indexOf("C") > -1){
+        bgc = "#FFFF66";
+    }else if(mark.indexOf("D") > -1){
+        bgc = "#FF9933";
+    }else if(mark.indexOf("F") > -1 || mark.indexOf("U") > -1 || mark.indexOf("I") > -1){
+        bgc = "#FF3333";
+    }
+    if(mark.indexOf("Extra Credit") > -1){
+        bgc = "#00FF00";
+    }
+    return bgc;
 }
 
 function processClassInfo(info) {
@@ -53,7 +90,8 @@ function processClassInfo(info) {
     console.log(rawScores);
     globalScores = rawScores;
     calculateMeta(parsed);
-    setClickListner();
+    setClickListner(parsed);
+    drawOverview(parsed);
     //drawClassData(0, rawScores);
     //13,0,0,0,4,1,0,1,1+2
 }
@@ -78,23 +116,14 @@ function drawClassData(id, scoreData) {
     console.log(scoreData[id])
     for(i=0; i<scoreData[id].length; i++){
         mark = scoreData[id][i][4];
-        if(mark.indexOf("A") > -1){
-            bgc = "#00FF00";
-        }else if(mark.indexOf("B") > -1){
-            bgc = "#CCFF66";
-        }else if(mark.indexOf("C") > -1){
-            bgc = "#FFFF66";
-        }else if(mark.indexOf("D") > -1){
-            bgc = "#FF9933";
-        }else if(mark.indexOf("F") > -1 || mark.indexOf("U") > -1 || mark.indexOf("I") > -1){
-            bgc = "#FF3333";
-        }
+        bgc = getBgc(mark);
         $('.overview tbody').append("<tr><td bgcolor='" + bgc + "' align='center'>" + scoreData[id][i][0] + "</td><td bgcolor='" + bgc + "' align='center'>" + scoreData[id][i][1] + "</td><td bgcolor='" + bgc + "'>" + scoreData[id][i][2] + "</td><td bgcolor='" + bgc + "'>" + scoreData[id][i][3] + "</td><td bgcolor='" + bgc + "'>" + scoreData[id][i][4] + "</td></tr>")
     }
 }
 
 function drawClassList(rawData) {
     console.log("test");
+    $('.class-list').append("<li><a href='#' class='showoverview'>Overview</a></li>");
     for(i=0; i<rawData.length; i++) {
         //console.log(rawData[i][13]);
         temp1 = rawData[i][13].children[0].children[0].children[0].children[2].innerText;
