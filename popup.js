@@ -42,7 +42,7 @@ function processClassInfo(info) {
         scoresLength = 0;
         for(j=0; j<rows.length; j++){
             if(rows[j].childNodes.length==15){
-                rawScores[i][scoresLength] = new Array(rows[j].children[1].textContent, rows[j].children[2].textContent, rows[j].children[3].textContent, rows[j].children[5].textContent, rows[j].children[6].textContent);
+                rawScores[i][scoresLength] = new Array(rows[j].children[1].textContent.trim(), rows[j].children[2].textContent.trim(), rows[j].children[3].textContent.trim(), rows[j].children[5].textContent.trim(), rows[j].children[6].textContent.trim());
                 //console.log(rawScores[i]);
                 scoresLength++;
             }
@@ -63,19 +63,33 @@ function calculateMeta(parsed){
     for(i=0; i<parsed.length; i++) {
         //console.log("in loop");
         globalMeta[i] = new Array();
-        globalMeta[i][0] = parsed[i][13].children[0].children[0].children[0].children[4].children[1].children[0].children[1].children[1].innerText;
-        globalMeta[i][1] = parsed[i][13].children[0].children[0].children[0].children[4].children[1].children[0].children[1].children[2].innerText;
+        globalMeta[i][0] = parsed[i][13].children[0].children[0].children[0].children[4].children[1].children[0].children[1].children[1].innerText.trim();
+        globalMeta[i][1] = parsed[i][13].children[0].children[0].children[0].children[4].children[1].children[0].children[1].children[2].innerText.trim();
     }
     //console.log(globalMeta);
 }
 
 function drawClassData(id, scoreData) {
+    var mark;
+    var bgc;
     $('.meta tbody').empty();
-    $('.meta tbody').append("<tr><td>" + globalMeta[id][0] + "</td><td>" + globalMeta[id][1] + "</td></tr>");
+    $('.meta tbody').append("<tr><td><b>Total Points: " + globalMeta[id][0] + "</b></td><td><b>Class Score: " + globalMeta[id][1] + "</b></td></tr>");
     $('.overview tbody').empty();
     console.log(scoreData[id])
-    for(i=0; i<scoreData[id].length; i++) {
-        $('.overview tbody').append("<tr><td>" + scoreData[id][i][0] + "</td><td>" + scoreData[id][i][1] + "</td><td>" + scoreData[id][i][2] + "</td><td>" + scoreData[id][i][3] + "</td><td>" + scoreData[id][i][4] + "</td></tr>")
+    for(i=0; i<scoreData[id].length; i++){
+        mark = scoreData[id][i][4];
+        if(mark.indexOf("A") > -1){
+            bgc = "#00FF00";
+        }else if(mark.indexOf("B") > -1){
+            bgc = "#CCFF66";
+        }else if(mark.indexOf("C") > -1){
+            bgc = "#FFFF66";
+        }else if(mark.indexOf("D") > -1){
+            bgc = "#FF9933";
+        }else if(mark.indexOf("F") > -1 || mark.indexOf("U") > -1 || mark.indexOf("I") > -1){
+            bgc = "#FF3333";
+        }
+        $('.overview tbody').append("<tr><td bgcolor='" + bgc + "' align='center'>" + scoreData[id][i][0] + "</td><td bgcolor='" + bgc + "' align='center'>" + scoreData[id][i][1] + "</td><td bgcolor='" + bgc + "'>" + scoreData[id][i][2] + "</td><td bgcolor='" + bgc + "'>" + scoreData[id][i][3] + "</td><td bgcolor='" + bgc + "'>" + scoreData[id][i][4] + "</td></tr>")
     }
 }
 
