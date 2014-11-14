@@ -1,5 +1,6 @@
 var globalScores;
 var globalMeta = new Array();
+var globalParsed;
 
 window.addEventListener('DOMContentLoaded', function() {
     /* ...query for the active tab... */
@@ -15,28 +16,34 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 function setClickListner(parsed){
-    $('.showoverview').click(function(){
-        drawOverview(parsed);
-    })
-    setClassListner();
-}
-
-function setClassListner(){
     $('.classid').click(function(){
-        console.log($(this).attr('cid'));
         drawClassData($(this).attr('cid'), globalScores);
     })
+    setChangeListner(parsed);
 }
 
-function drawOverview(rawData){
+function setChangeListner(parsed){
+    $('.class-list').change(function(){
+        //console.log($('.class-list')[0]);
+        if($('.class-list')[0].value == "overview"){
+            drawOverview(parsed);
+        }else{
+            drawClassData($('.class-list')[0].value, globalScores);
+        }
+    })
+
+}
+
+function drawOverview(){
     $('.overview tbody').empty();
     $('.meta tbody').empty();
-    for(i=0; i<rawData.length; i++) {
-        temp1 = rawData[i][13].children[0].children[0].children[0].children[2].innerText;
+    for(i=0; i<globalParsed.length; i++) {
+        //console.log(rawData);
+        temp1 = globalParsed[i][13].children[0].children[0].children[0].children[2].innerText;
         bgc = getBgc(globalMeta[i][1]);
         $('.overview tbody').append("<tr><td><b><a class='classid' cid='" + i + "' href='#'>" + temp1 + "</a></b></td><td bgcolor='" + bgc + "'>" + globalMeta[i][1] + "</td></tr>");
-        setClassListner();
     }
+    setClickListner(globalScores);
 }
 
 function getBgc(mark){
@@ -65,6 +72,7 @@ function processClassInfo(info) {
     for(i=0; i<(info.length); i++) {
         parsed[i] = $.parseHTML(info[i]);
     }
+    globalParsed = parsed;
     console.log(parsed);
     drawClassList(parsed);
     var rawScores = new Array();
@@ -73,7 +81,7 @@ function processClassInfo(info) {
     var temp1;
     for(i=0; i<parsed.length; i++) {
         rows = parsed[i][13].children[0].children[0].children[0].children[5].children[1].children[0].childNodes;
-        console.log(rows);
+        //console.log(rows);
         //console.log(rows.length);
         rawScores[i] = new Array();
         scoresLength = 0;
@@ -87,7 +95,7 @@ function processClassInfo(info) {
         //Date, Category, Assignment Name, Score, Points, Grade (unparsed)
         //rawScores[i] = new Array(
     }
-    console.log(rawScores);
+    //console.log(rawScores);
     globalScores = rawScores;
     calculateMeta(parsed);
     setClickListner(parsed);
@@ -108,12 +116,13 @@ function calculateMeta(parsed){
 }
 
 function drawClassData(id, scoreData) {
+    //console.log(id);
     var mark;
     var bgc;
     $('.meta tbody').empty();
     $('.meta tbody').append("<tr><td><b>Total Points: " + globalMeta[id][0] + "</b></td><td><b>Class Score: " + globalMeta[id][1] + "</b></td></tr>");
     $('.overview tbody').empty();
-    console.log(scoreData[id])
+    //console.log(scoreData[id])
     for(i=0; i<scoreData[id].length; i++){
         mark = scoreData[id][i][4];
         bgc = getBgc(mark);
@@ -122,12 +131,17 @@ function drawClassData(id, scoreData) {
 }
 
 function drawClassList(rawData) {
-    console.log("test");
-    $('.class-list').append("<li><a href='#' class='showoverview'>Overview</a></li>");
+    /*$('.class-list').append("<li><a href='#' class='showoverview'>Overview</a></li>");
     for(i=0; i<rawData.length; i++) {
         //console.log(rawData[i][13]);
         temp1 = rawData[i][13].children[0].children[0].children[0].children[2].innerText;
         console.log(temp1);
-        $('.class-list').append("<li><a class='classid' cid='" + i + "' href='#'>" + temp1 + "</a></li>");
+        $('.class-list').append("<li><a class='classid' cid='" + i + "' href='#'>" + temp1 + "</a></li>");*/
+    $('.class-list').append("<option value='overview' class='showoverview'>Overview</option>");
+    for(i=0; i<rawData.length; i++) {
+        console.log(i);
+        temp1 = rawData[i][13].children[0].children[0].children[0].children[2].innerText;
+        $('.class-list').append("<option class='classid' value='" + i + "'>" + temp1 + "</option>");
+        console.log(temp1);
     }
 }
